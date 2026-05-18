@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "faas_gauge"
+version = "1.0.0"
+description = "AI Code Generation Testing and Validation Framework"
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.0",
+]
+
+[project.optional-dependencies]
+aws = ["boto3>=1.26.0"]
+notebooks = ["jupyter", "pandas", "matplotlib"]
+migrate = ["pyyaml>=6.0"]
+dev = ["pytest>=7.0", "pytest-cov>=4.0", "black>=23.0", "mypy>=1.0"]
+all = ["faas_gauge[aws,notebooks,migrate,dev]"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["faas_gauge*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"

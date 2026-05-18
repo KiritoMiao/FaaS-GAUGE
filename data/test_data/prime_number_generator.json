@@ -1,0 +1,245 @@
+{
+  "tests": [
+    {
+      "name": "small_primes",
+      "input": {
+        "n": 10
+      },
+      "expected": {
+        "count": 4,
+        "data": [
+          2,
+          3,
+          5,
+          7
+        ]
+      }
+    },
+    {
+      "name": "primes_to_30",
+      "input": {
+        "n": 30
+      },
+      "expected": {
+        "count": 10,
+        "data": [
+          2,
+          3,
+          5,
+          7,
+          11,
+          13,
+          17,
+          19,
+          23,
+          29
+        ]
+      }
+    },
+    {
+      "name": "primes_to_100",
+      "input": {
+        "n": 100
+      },
+      "expected": {
+        "count": 25,
+        "data": [
+          2,
+          3,
+          5,
+          7,
+          11,
+          13,
+          17,
+          19,
+          23,
+          29,
+          31,
+          37,
+          41,
+          43,
+          47,
+          53,
+          59,
+          61,
+          67,
+          71,
+          73,
+          79,
+          83,
+          89,
+          97
+        ]
+      }
+    },
+    {
+      "name": "edge_case_1",
+      "input": {
+        "n": 1
+      },
+      "expected": {
+        "count": 0,
+        "data": []
+      }
+    },
+    {
+      "name": "edge_case_2",
+      "input": {
+        "n": 2
+      },
+      "expected": {
+        "count": 1,
+        "data": [
+          2
+        ]
+      }
+    },
+    {
+      "name": "performance",
+      "validation": "count_only",
+      "description": "Performance step tests for scaling behavior from small to large inputs",
+      "exclude_result": true,
+      "size_tests": [
+        {
+          "size_label": "n=1000000",
+          "input": {
+            "n": 1000000
+          },
+          "expected": {
+            "count": 78498
+          }
+        },
+        {
+          "size_label": "n=10000000",
+          "input": {
+            "n": 10000000
+          },
+          "expected": {
+            "count": 664579
+          }
+        },
+        {
+          "size_label": "n=50000000",
+          "input": {
+            "n": 50000000
+          },
+          "expected": {
+            "count": 3001134
+          }
+        },
+        {
+          "size_label": "n=75000000",
+          "input": {
+            "n": 75000000
+          },
+          "expected": {
+            "count": 4394304
+          }
+        },
+        {
+          "size_label": "n=100000000",
+          "input": {
+            "n": 100000000
+          },
+          "expected": {
+            "count": 5761455
+          }
+        },
+        {
+          "size_label": "n=125000000",
+          "input": {
+            "n": 125000000
+          },
+          "expected": {
+            "count": 7110142
+          }
+        },
+        {
+          "size_label": "n=150000000",
+          "input": {
+            "n": 150000000
+          },
+          "expected": {
+            "count": 8444396
+          }
+        },
+        {
+          "size_label": "n=175000000",
+          "input": {
+            "n": 175000000
+          },
+          "expected": {
+            "count": 9766772
+          }
+        },
+        {
+          "size_label": "n=200000000",
+          "input": {
+            "n": 200000000
+          },
+          "expected": {
+            "count": 11078937
+          }
+        }
+      ]
+    }
+  ],
+  "removed_tests": [
+    {
+      "name": "performance",
+      "input": {
+        "n": 1000000
+      },
+      "validation": "count_only",
+      "expected": {
+        "count": 78498
+      },
+      "description": "Performance test targeting ~45s runtime - primes up to 1 million",
+      "exclude_result": true
+    },
+    {
+      "name": "performance",
+      "input": {
+        "n": 10000000
+      },
+      "validation": "count_only",
+      "expected": {
+        "count": 664579
+      },
+      "description": "Performance test targeting ~45s runtime - primes up to 10 million",
+      "exclude_result": true
+    },
+    {
+      "name": "performance",
+      "input": {
+        "n": 50000000
+      },
+      "validation": "count_only",
+      "expected": {
+        "count": 3001134
+      },
+      "description": "Performance test targeting ~45s runtime - primes up to 50 million",
+      "exclude_result": true
+    },
+    {
+      "name": "performance",
+      "input": {
+        "n": 100000000
+      },
+      "validation": "count_only",
+      "expected": {
+        "count": 5761455
+      }
+    },
+    {
+      "name": "performance",
+      "input": {
+        "n": 200000000
+      },
+      "validation": "count_only",
+      "expected": {
+        "count": 11078937
+      }
+    }
+  ]
+}

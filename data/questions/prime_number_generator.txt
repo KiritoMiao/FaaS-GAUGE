@@ -1,0 +1,30 @@
+Write an AWS Lambda function in Python that generates all prime numbers up to a given number. A prime number is a natural number greater than 1 that has exactly two distinct factors: 1 and itself (for example, 2 and 3 are prime, but 4 is not since it is divisible by 2).
+
+Requirements:
+
+Input:
+The Lambda function will receive a JSON object with the following structure:
+{
+    "n": <upper_bound>
+}
+where <upper_bound> is the number up to which primes should be generated (inclusive).
+
+Output:
+The function should return a JSON object containing:
+count: the total number of prime numbers generated.
+data: a list of the generated prime numbers.
+Example:
+
+For an input of:
+
+{
+    "n": 10
+}
+the output should be:
+
+{
+    "count": 4,
+    "data": [2, 3, 5, 7]
+}
+Develop the complete Python code for this AWS Lambda function.
+

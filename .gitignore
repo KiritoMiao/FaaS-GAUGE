@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+build/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Credentials (NEVER commit)
+data/config/credentials.json
+
+# Paper-specific historical outputs (regenerate by running the pipeline)
+data/experiments/
+data/validations/
+data/logs/
+data/reports/
+
+# AI-agent coordination (local-only, not part of public artifact)
+AGENTS.md
+**/AGENTS.md
+CLAUDE.md
+**/CLAUDE.md
+.claude/
+.omc/
