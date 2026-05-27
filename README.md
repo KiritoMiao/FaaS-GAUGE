@@ -1,10 +1,10 @@
 # FaaS-GAUGE
 
-FaaS-GAUGE is the paper-canonical benchmark for evaluating LLM-generated serverless code on AWS Lambda. It prompts multiple LLM providers to write Python AWS Lambda functions, validates the generated code (locally or on live Lambda), and stores structured results for analysis. FaaS-GAUGE is a full-rename fork of the `revolution` framework, packaged here as the public artifact for the FaaS-GAUGE benchmark paper.
+FaaS-GAUGE is the repeatable benchmark for evaluating LLM-generated serverless code on AWS Lambda. It prompts multiple LLM providers to write Python AWS Lambda functions, validates the generated code (locally or on live Lambda), and stores structured results for analysis. FaaS-GAUGE is packaged here as a public artifact for the FaaS-GAUGE benchmark paper.
 
-## Quickstart
+## Quickstart Test
 
-Install the package, copy and fill in your credentials file, generate code for the bundled prime-number question, validate it locally, then optionally run the full AWS Lambda pipeline. Results are exported as CSVs via `scripts/export_results.py`.
+Install the benchmark, copy and fill in your credentials file, generate code for the bundled prime-number question, validate it locally, then optionally run the full AWS Lambda pipeline. Results are exported as CSVs via `scripts/export_results.py`.
 
 ---
 
@@ -40,9 +40,9 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -e .[dev,aws,notebooks]
 ```
 
-Available extras:
+Available required library bundles:
 
-| Extra       | What it adds                                    |
+| Bundle      | What it adds                                    |
 |-------------|-------------------------------------------------|
 | `dev`       | pytest, pytest-cov, black, mypy                 |
 | `aws`       | boto3 (required for AWS Lambda validation)      |
@@ -86,7 +86,7 @@ The credentials file structure:
 }
 ```
 
-Each key under `ai_providers` is a provider name (`openai`, `deepseek`, `xai`, `router/openrouter`, etc.). The `api_base` field lets you point any provider at an OpenAI-compatible endpoint.
+Each key under `ai_providers` is a provider name (`openai`, `deepseek`, `xai`, `router/openrouter`, etc.). The `api_base` field lets you point at any provider or at an OpenAI-compatible endpoint.
 
 ### Environment Variable Overrides
 
@@ -97,7 +97,7 @@ Each key under `ai_providers` is a provider name (`openai`, `deepseek`, `xai`, `
 | `FAAS_GAUGE_AI_OPENAI_API_KEY` | Override the OpenAI API key from the credentials file |
 | `FAAS_GAUGE_AI_{PROVIDER}_API_KEY` | Override any provider's API key (uppercase provider name) |
 
-Data directory auto-discovery: the framework walks up from CWD looking for `data/config/`. Set `FAAS_GAUGE_DATA_DIR` to skip discovery.
+Data directory auto-discovery: the framework walks up from the CWD to look for `data/config/`. Set `FAAS_GAUGE_DATA_DIR` to skip discovery.
 
 ---
 
@@ -109,7 +109,7 @@ Data directory auto-discovery: the framework walks up from CWD looking for `data
 You are a helpful coding assistant. Write clean, efficient Python code.
 ```
 
-`data/questions/prime_number_generator.txt` is the bundled question (the canonical worked example):
+`data/questions/prime_number_generator.txt` provides a bundled question as working example:
 
 ```
 Write an AWS Lambda function in Python that generates all prime numbers up to a given
@@ -128,7 +128,7 @@ The expected I/O pairs for correctness checking live in `data/test_data/prime_nu
 
 ---
 
-## End-to-End Worked Example
+## End-to-End Working Example - Prime Number Generation
 
 The following commands run the full pipeline on the bundled prime-number question.
 
