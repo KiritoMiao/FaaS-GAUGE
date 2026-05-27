@@ -109,7 +109,7 @@ Data directory auto-discovery: the framework walks up from the CWD to look for `
 You are a helpful coding assistant. Write clean, efficient Python code.
 ```
 
-`data/questions/prime_number_generator.txt` provides a bundled question as working example:
+`data/questions/prime_number_generator.txt` provides a bundled question as a working example:
 
 ```
 Write an AWS Lambda function in Python that generates all prime numbers up to a given
@@ -130,7 +130,7 @@ The expected I/O pairs for correctness checking live in `data/test_data/prime_nu
 
 ## End-to-End Working Example - Prime Number Generation
 
-The following commands run the full pipeline on the bundled prime-number question.
+The following commands run the full LLM code generation analysis pipeline on the bundled prime-number question.
 
 ### 1. Generate Code
 
@@ -161,7 +161,7 @@ Output is written to `data/experiments/{experiment_id}/`:
 .venv/bin/python scripts/validate.py -g demo_run -r local
 ```
 
-The validator injects SAAF instrumentation into each generated function, executes it in-process with `importlib`, and compares output against `data/test_data/prime_number_generator.json`. Each run is classified into one of (in priority order):
+The validator injects SAAF instrumentation into each generated function, executes it in-process with `importlib`, and compares output against `data/test_data/prime_number_generator.json`. Each run is classified as one of the following states (states are ordered by increasing code quality):
 
 ```
 syntax-error > out-of-memory > scaling-bug > timeout > functional-error > success
@@ -225,11 +225,11 @@ Flags: `--skip-generate`, `--skip-static`, `--skip-validate`, `--skip-reports`
 
 ## Adding More Questions
 
-Each new question requires:
+New questions can be added to FaaS-GAUGE. Each new question requires:
 
 1. `data/questions/{name}.txt` — the natural-language prompt sent to the LLM
 2. `data/test_data/{name}.json` — expected I/O pairs for correctness checking (array of `{"input": {...}, "output": {...}}` objects)
-3. (Optional) A custom validator in `faas_gauge/validator/validators.py` under the `VALIDATORS` dict, if generic output comparison is insufficient. Validators must conform to the signature `(actual, expected, optional_arg=None) -> (bool, str)`.
+3. (Optional) A custom validator in `faas_gauge/validator/validators.py` under the `VALIDATORS` dict, is required if generic output comparison is insufficient. This applies to functions that produce non-deterministic output. Validators must conform to the signature `(actual, expected, optional_arg=None) -> (bool, str)`.
 4. Update the `QUESTIONS` array and `VALIDATION_CONFIG` in `scripts/run_weekly_test.sh`.
 5. Update the pricing table and question list in `scripts/rq4_analysis.py`.
 
@@ -237,12 +237,13 @@ See `faas_gauge/validator/validators.py` and the `CLAUDE.md` file (present on di
 
 ---
 
-## Testing
+## FaaS-Gauge Framework Test
 
 ```bash
 pytest
 ```
 
+This performs an offline test to verify if the FaaS-GAUGE framework is installed properly and ready to use. 
 Tests mock `openai.OpenAI` and `boto3.Session` — no live API calls are made. All tests run from the repo root; configuration is in `pyproject.toml` under `[tool.pytest.ini_options]`.
 
 Run a single module or test:
