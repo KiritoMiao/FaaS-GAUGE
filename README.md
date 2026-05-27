@@ -258,6 +258,8 @@ pytest -k classify
 
 ## Lint / Format / Types
 
+FaaS-GAUGE uses three tools to test for errors, bugs, and sylisyic inconsistences of LLM-generated Python code. This section simplies tests these tools against the FaaS-GAUGE repository to verify that they are working.
+
 ```bash
 ruff check           # lint
 black .              # format (line-length 100, targets py310-py312)
