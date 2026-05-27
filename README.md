@@ -270,9 +270,7 @@ mypy faas_gauge      # type-check
 
 ## Architecture Overview
 
-```
-config -> ai -> store -> validator -> experiment -> scripts/
-```
+The table describes individual Python modules of the FaaS-GAUGE software architecture.
 
 | Module | Role |
 |--------|------|
