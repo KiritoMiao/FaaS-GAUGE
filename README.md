@@ -233,7 +233,7 @@ New questions can be added to FaaS-GAUGE. Each new question requires:
 4. Update the `QUESTIONS` array and `VALIDATION_CONFIG` in `scripts/run_weekly_test.sh`.
 5. Update the pricing table and question list in `scripts/rq4_analysis.py`.
 
-See `faas_gauge/validator/validators.py` and the `CLAUDE.md` file (present on disk, gitignored) for the full pattern.
+See `faas_gauge/validator/validators.py` for the full pattern.
 
 ---
 
