@@ -126,6 +126,10 @@ Example: input {"n": 10} -> output {"count": 4, "data": [2, 3, 5, 7]}
 
 The expected I/O pairs for correctness checking live in `data/test_data/prime_number_generator.json`.
 
+We intentionally keep some of our benchmark materials private to prevent AI coding assistants and LLM training pipelines from ingesting our test prompts, expected outputs, and verification logic. If these artifacts were publicly available, AI models could be trained on (or memorize) our exact test cases, which would invalidate the benchmark results.
+If you want to access those benchmark materials, please visit [FaaS Gauge Benchmark Artifacts Invite Portal](https://faas-gauge-benchmarks.kirito.one/) to get a GitHub Invite.
+
+
 ---
 
 ## End-to-End Working Example - Prime Number Generation
