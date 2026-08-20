@@ -2,6 +2,8 @@
 
 FaaS-GAUGE is the repeatable benchmark for evaluating LLM-generated serverless code on AWS Lambda. It prompts multiple LLM providers to write Python AWS Lambda functions, validates the generated code (locally or on live Lambda), and stores structured results for analysis. FaaS-GAUGE is packaged here as a public artifact for the FaaS-GAUGE benchmark paper.
 
+See [Architecture Overview](#architecture-overview) below for the benchmark pipeline at a glance, or [`docs/architecture.md`](docs/architecture.md) for the full design overview.
+
 ## Quickstart Test
 
 Install the benchmark, copy and fill in your credentials file, generate code for the bundled prime-number question, validate it locally, then optionally run the full AWS Lambda pipeline. Results are exported as CSVs via `scripts/export_results.py`.
@@ -274,6 +276,54 @@ mypy faas_gauge      # type-check
 
 ## Architecture Overview
 
+FaaS-GAUGE carries a natural-language prompt all the way to a deployed, measured AWS Lambda function.
+Each generation is statically analysed, deployed under SAAF instrumentation, executed on real Lambda
+hardware, checked against reference I/O, and priced — with every intermediate artifact written to
+disk as plain JSON/JSONL.
+
+```mermaid
+%%{init: {"flowchart": {"wrappingWidth": 420, "nodeSpacing": 45, "rankSpacing": 45}}}%%
+flowchart TB
+    P["1 · Prompt input<br/>task prompt + system preamble<br/>data/questions · data/prompts"]
+    G["2 · LLM generation<br/>AIClient over OpenAI-compatible endpoints<br/>N iterations per prompt and model"]
+    S["3 · Static analysis<br/>Pylint + Radon<br/>score, cyclomatic complexity,<br/>maintainability index, LLOC"]
+    D["4 · Build and deploy<br/>handler detection · SAAF injection<br/>dependency bundling · zip<br/>AWS Lambda, 1769 MB, python3.11"]
+    E["5 · Instrumented execution<br/>SAAF telemetry: runtime, CPU model,<br/>cold-start flag<br/>CloudWatch REPORT: max memory used"]
+    C["6 · Correctness check<br/>compare against reference I/O,<br/>assign one priority-ordered label:<br/>syntax-error ▸ out-of-memory ▸ scaling-bug<br/>▸ timeout ▸ functional-error ▸ success"]
+    ST[("7 · Result store<br/>data/experiments/ · data/validations/<br/>append-only JSON and JSONL")]
+    A["8 · Analysis and reporting<br/>CSV exports · statistical tests · figures<br/>cost model: tokens x price, GB-seconds"]
+
+    P --> G
+    G --> S
+    G --> D
+    D --> E
+    E --> C
+    S --> ST
+    C --> ST
+    ST --> A
+
+    classDef input fill:#E8F0FE,stroke:#4285F4,color:#0B213F
+    classDef llm   fill:#E6F4EA,stroke:#34A853,color:#0B2E13
+    classDef stat  fill:#FEF7E0,stroke:#F9AB00,color:#3D2C00
+    classDef dep   fill:#FFF0E1,stroke:#FF9900,color:#3D2400
+    classDef chk   fill:#FCE8E6,stroke:#EA4335,color:#3D0F0A
+    classDef st    fill:#F3E8FD,stroke:#A142F4,color:#2B0B47
+    classDef rep   fill:#E0F7FA,stroke:#00ACC1,color:#00323A
+    class P input
+    class G llm
+    class S stat
+    class D,E dep
+    class C chk
+    class ST st
+    class A rep
+```
+
+Generation and measurement are decoupled: generation writes an immutable append-only record, and
+validation reads it back and writes a separate batch. The same generation can therefore be
+re-validated at a different memory size, timeout, or runtime without regenerating code, and
+validation is resumable — an interrupted AWS run skips the `(experiment, iteration)` pairs it already
+recorded.
+
 The table describes individual Python modules of the FaaS-GAUGE software architecture.
 
 | Module | Role |
@@ -284,3 +334,7 @@ The table describes individual Python modules of the FaaS-GAUGE software archite
 | `faas_gauge.validator` | `FunctionValidator` with `LocalRunner` (in-process) and `AWSRunner` (Lambda deploy + invoke). SAAF instrumentation injected at build time. |
 | `faas_gauge.experiment` | `generate()` and `validate_batch()` with resume support. `classify_function_status` priority order is load-bearing. |
 | `scripts/` | Thin argparse wrappers over library functions + analysis/reporting scripts. |
+
+For the full design overview — expanded pipeline figure, package layering, SAAF injection and the
+two execution backends, the classification decision flow, the on-disk data model, the metrics
+catalogue, and the cost model — see [`docs/architecture.md`](docs/architecture.md).
